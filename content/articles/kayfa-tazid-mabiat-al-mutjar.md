@@ -1,5 +1,7 @@
 ---
 title: كيف تزيد مبيعات متجرك الإلكتروني في 2026؟
+pageTitle: test
+metaDescription: test
 slug: kayfa-tazid-mabiat-al-mutjar
 category: التسويق الإلكتروني
 date: 2026-08-15
