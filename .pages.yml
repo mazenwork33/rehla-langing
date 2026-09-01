@@ -8,33 +8,57 @@ content:
     type: collection
     path: "content/articles"
     format: "yaml-frontmatter"
+
     view:
-      fields: [title, category, date, published]
+      fields:
+        - title
+        - pageTitle
+        - category
+        - date
+        - published
+
     fields:
       - name: title
         label: عنوان المقال
         type: string
         required: true
+
+      - name: pageTitle
+        label: عنوان الصفحة SEO
+        type: string
+        required: true
+
+      - name: metaDescription
+        label: وصف الصفحة Meta Description
+        type: text
+        required: true
+
       - name: slug
         label: الرابط (بالإنجليزي، بدون مسافات)
         type: string
         required: true
+
       - name: category
         label: التصنيف
         type: string
+
       - name: date
         label: تاريخ النشر
         type: date
+
       - name: published
         label: منشور
         type: boolean
         default: true
+
       - name: excerpt
         label: مقتطف قصير (يظهر في قائمة المقالات)
         type: text
+
       - name: image
         label: صورة المقال
         type: image
+
       - name: body
         label: محتوى المقال
         type: rich-text
