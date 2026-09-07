@@ -1,4 +1,3 @@
-
 // MODAL
 function openModal(){
   document.getElementById('formModal').classList.add('show');
@@ -39,9 +38,7 @@ function submitModal(){
     })
   }).then(function(res){
     if(res.ok){
-      document.getElementById('modalFormContent').style.display='none';
-      document.getElementById('modalSuccess').style.display='block';
-      setTimeout(closeModal,4000);
+      window.location.href='/thank-you.html';
     }else{
       alert('حصل خطأ أثناء الإرسال، من فضلك حاول مرة أخرى أو تواصل معنا عبر واتساب.');
     }
@@ -82,8 +79,7 @@ function submitInline(){
     })
   }).then(function(res){
     if(res.ok){
-      document.getElementById('inlineFormContent').style.display='none';
-      document.getElementById('inlineSuccess').style.display='block';
+      window.location.href='/thank-you.html';
     }else{
       alert('حصل خطأ أثناء الإرسال، من فضلك حاول مرة أخرى أو تواصل معنا عبر واتساب.');
     }
@@ -149,15 +145,3 @@ document.querySelectorAll('.rv').forEach(el=>obs.observe(el));
 window.addEventListener('scroll',()=>{
   document.getElementById('mainNav').style.height=window.scrollY>40?'54px':'66px';
 });
-
-// MOBILE MENU TOGGLE
-const burger=document.getElementById('navBurger');
-const mobileMenu=document.getElementById('navLinksMobile');
-if(burger && mobileMenu){
-  burger.addEventListener('click',()=>{
-    mobileMenu.classList.toggle('open');
-  });
-  mobileMenu.querySelectorAll('a').forEach(a=>{
-    a.addEventListener('click',()=>mobileMenu.classList.remove('open'));
-  });
-}
