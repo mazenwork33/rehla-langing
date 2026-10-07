@@ -1,8 +1,3 @@
-/**
- * Build script — يشتغل تلقائي وقت الرفع على Cloudflare Pages.
- * 1) بينسخ محتوى مجلد public (اللاندنج بيدج والأصول) إلى dist
- * 2) بيقرأ كل مقالات content/articles ويبني منها صفحة /blog وصفحات كل مقال
- */
 const fs = require('fs');
 const path = require('path');
 const matter = require('gray-matter');
@@ -12,6 +7,7 @@ const ROOT = __dirname;
 const PUBLIC_DIR = path.join(ROOT, 'public');
 const ARTICLES_DIR = path.join(ROOT, 'content', 'articles');
 const DIST_DIR = path.join(ROOT, 'dist');
+const SITE_URL = 'https://sa.rehlamarketing.com';
 
 function copyDir(src, dest) {
   fs.mkdirSync(dest, { recursive: true });
@@ -130,10 +126,38 @@ function buildArticlePage(a) {
     ${a.html}
     <div class="cta-box">
       <p>عايز نتائج زي دي لمتجرك؟</p>
-      <a href="/#contact" class="cta-btn">احجز استشارة مجانية ←</a>
+      <a href="/contact.html" class="cta-btn">احجز استشارة مجانية ←</a>
     </div>
   </div>`;
   return page(a.title, body);
+}
+
+function buildSitemap(articles) {
+  const staticPages = [
+    { loc: '/', priority: '1.0' },
+    { loc: '/about.html', priority: '0.8' },
+    { loc: '/services.html', priority: '0.9' },
+    { loc: '/service-ads.html', priority: '0.9' },
+    { loc: '/service-seo.html', priority: '0.9' },
+    { loc: '/work.html', priority: '0.8' },
+    { loc: '/contact.html', priority: '0.7' },
+    { loc: '/blog/', priority: '0.7' },
+  ];
+  const articleEntries = articles.map(a => ({
+    loc: `/blog/${a.slug}/`,
+    priority: '0.6',
+    lastmod: a.date || undefined
+  }));
+  const all = [...staticPages, ...articleEntries];
+  const urls = all.map(u => `  <url>
+    <loc>${SITE_URL}${u.loc}</loc>
+    ${u.lastmod ? `<lastmod>${u.lastmod}</lastmod>\n    ` : ''}<priority>${u.priority}</priority>
+  </url>`).join('\n');
+
+  return `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+${urls}
+</urlset>`;
 }
 
 // ---- run build ----
@@ -152,4 +176,7 @@ for (const a of articles) {
   fs.writeFileSync(path.join(artDir, 'index.html'), buildArticlePage(a));
 }
 
-console.log(`Built ${articles.length} article(s) into /dist/blog`);
+// sitemap.xml — auto-includes every published article
+fs.writeFileSync(path.join(DIST_DIR, 'sitemap.xml'), buildSitemap(articles));
+
+console.log(`Built ${articles.length} article(s) into /dist/blog and generated sitemap.xml with ${articles.length + 8} URLs`);
